@@ -1,6 +1,7 @@
 call plug#begin()
 
 Plug 'ambv/black'
+Plug 'github/copilot.vim'
 Plug 'fatih/vim-go'
 Plug 'preservim/nerdtree'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -132,5 +133,32 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
+let g:rustfmt_autosave = 1
+let g:rust_clip_command = 'pbcopy'
 
+set termguicolors
 set number
+syntax enable
+filetype plugin indent on
+
+Plug 'prabirshrestha/vim-lsp'
+
+Plug 'Shougo/deoplete.nvim'
+Plug 'lighttiger2505/deoplete-vim-lsp'
+
+" setting with vim-lsp
+if executable('ccls')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(
+      \   lsp#utils#find_nearest_parent_file_directory(
+      \     lsp#utils#get_buffer_path(), ['.ccls', 'compile_commands.json', '.git/']))},
+      \ 'initialization_options': {
+      \   'highlight': { 'lsRanges' : v:true },
+      \   'cache': {'directory': stdpath('cache') . '/ccls' },
+      \ },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+endif
+Plug 'jackguo380/vim-lsp-cxx-highlight'
